@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pokemon Battle Rater",
-  description: "Analyze how your Pokemone team performs in battle",
+  title: "Pokemon Search",
+  description: "Search Pokemon",
 };
 
 export default function RootLayout({
