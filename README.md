@@ -1,6 +1,9 @@
 # Poke Next App
 
-testing shadui with next
+https://poke-next-app-iota.vercel.app/
 
-- inifinite scrolling
-- search bar connected to api
+- shadui
+- Next.js
+
+- Inifinite scrolling
+- Search bar connected to api
