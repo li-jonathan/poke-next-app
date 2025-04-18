@@ -8,6 +8,8 @@ interface PokemonGridProps {
   isSearching: boolean;
   isLoadingMore: boolean;
   hasMore: boolean;
+  onPokemonClick?: (pokemon: Pokemon) => void;
+  activeTeam?: "my" | "enemy";
 }
 
 export default function PokemonGrid({
@@ -16,10 +18,12 @@ export default function PokemonGrid({
   isSearching,
   isLoadingMore,
   hasMore,
+  onPokemonClick,
+  activeTeam,
 }: PokemonGridProps) {
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {pokemon.map((pokemonItem, index) => {
           const isLastElement = index === pokemon.length - 1;
           return (
@@ -27,7 +31,13 @@ export default function PokemonGrid({
               key={pokemonItem.id}
               ref={isLastElement && !isSearching ? lastPokemonRef : null}
             >
-              <PokemonCard pokemon={pokemonItem} />
+              <PokemonCard
+                pokemon={pokemonItem}
+                onClick={
+                  onPokemonClick ? () => onPokemonClick(pokemonItem) : undefined
+                }
+                activeTeam={activeTeam}
+              />
             </div>
           );
         })}

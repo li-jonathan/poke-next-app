@@ -14,7 +14,7 @@ export default function SearchBar({ value, onChange }: SearchBarProps) {
       placeholder="Search by name, ID or type..."
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full"
+      className="w-full p-6"
     />
   );
 }
