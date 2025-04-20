@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SearchBar from "@/components/search-bar";
 import PokemonGrid from "@/components/pokemon-grid";
 import LoadingSkeletons from "@/components/loading-skeletons";
@@ -22,6 +22,30 @@ export default function PokemonSearch() {
   const [myTeam, setMyTeam] = useState<Pokemon[]>([]);
   const [enemyTeam, setEnemyTeam] = useState<Pokemon[]>([]);
   const [activeTeam, setActiveTeam] = useState<"my" | "enemy">("my");
+  const [isLoadingTeams, setIsLoadingTeams] = useState(true);
+
+  useEffect(() => {
+    const storedMyTeam = localStorage.getItem("myTeam");
+    const storedEnemyTeam = localStorage.getItem("enemyTeam");
+
+    if (storedMyTeam) {
+      try {
+        setMyTeam(JSON.parse(storedMyTeam));
+      } catch (error) {
+        console.error("Error parsing stored myTeam:", error);
+      }
+    }
+
+    if (storedEnemyTeam) {
+      try {
+        setEnemyTeam(JSON.parse(storedEnemyTeam));
+      } catch (error) {
+        console.error("Error parsing stored enemyTeam:", error);
+      }
+    }
+
+    setIsLoadingTeams(false);
+  }, []);
 
   const addToTeam = (pokemon: Pokemon) => {
     const team = activeTeam === "my" ? myTeam : enemyTeam;
@@ -46,7 +70,9 @@ export default function PokemonSearch() {
 
     setTeam([...team, pokemon]);
     toast.success("Added to team", {
-      description: `${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)} added to ${teamName}.`,
+      description: `${
+        pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)
+      } added to ${teamName}.`,
     });
   };
 
@@ -61,19 +87,23 @@ export default function PokemonSearch() {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex flex-col xl:flex-row gap-8">
-        <div className="mx-auto flex flex-col bg-gray-100 rounded-md p-6">
+        <div className="xl:w-1/4 h-fit xl:sticky xl:top-8 xl:self-start flex flex-col bg-gray-100 rounded-md p-6">
           <h1 className="text-3xl font-bold text-center mb-6">
             Pokémon Battle Buddy
           </h1>
-          <TeamBuilder
-            myTeam={myTeam}
-            enemyTeam={enemyTeam}
-            activeTeam={activeTeam}
-            setActiveTeam={setActiveTeam}
-            removeFromTeam={removeFromTeam}
-          />
+          {isLoadingTeams ? (
+            <p>Loading teams...</p>
+          ) : (
+            <TeamBuilder
+              myTeam={myTeam}
+              enemyTeam={enemyTeam}
+              activeTeam={activeTeam}
+              setActiveTeam={setActiveTeam}
+              removeFromTeam={removeFromTeam}
+            />
+          )}
         </div>
-        <div className="w-full">
+        <div className="w-full overflow-y-hidden">
           <div className="mx-auto mb-8">
             <SearchBar value={searchQuery} onChange={setSearchQuery} />
           </div>

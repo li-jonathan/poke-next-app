@@ -5,9 +5,9 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Swords } from "lucide-react";
-import Link from "next/link";
 import { toast } from "sonner";
 import { TeamDisplay } from "./team-display";
+import { redirect } from "next/navigation";
 
 interface TeamBuilderProps {
   myTeam: Pokemon[];
@@ -24,7 +24,6 @@ export function TeamBuilder({
   setActiveTeam,
   removeFromTeam,
 }: TeamBuilderProps) {
-
   const handleBattleClick = () => {
     if (myTeam.length === 0) {
       toast.error("Your team is empty", {
@@ -42,6 +41,8 @@ export function TeamBuilder({
 
     localStorage.setItem("myTeam", JSON.stringify(myTeam));
     localStorage.setItem("enemyTeam", JSON.stringify(enemyTeam));
+
+    redirect("/battle");
   };
 
   return (
@@ -77,8 +78,8 @@ export function TeamBuilder({
 
       <div className="my-6 text-sm text-muted-foreground">
         <p>
-          Click on a Pokémon card below to add it to your{" "}
-          {activeTeam === "my" ? "team" : "enemy team"}.
+          Click on a Pokémon card below to add it to {" "}
+          {activeTeam === "my" ? "your team" : "enemy team"}.
         </p>
       </div>
 
@@ -98,12 +99,13 @@ export function TeamBuilder({
       </div>
 
       <div className="mt-6 flex justify-center">
-        <Link href="/battle" onClick={handleBattleClick}>
-          <Button className="gap-2">
-            <Swords className="h-4 w-4" />
-            Analyze Battle Matchup
-          </Button>
-        </Link>
+        <Button
+          className="gap-2"
+          onClick={handleBattleClick}
+        >
+          <Swords className="h-4 w-4" />
+          Analyze Battle Matchup
+        </Button>
       </div>
     </div>
   );
